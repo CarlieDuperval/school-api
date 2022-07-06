@@ -56,3 +56,53 @@ export const deleteSchool = async (id) => {
     res.status(500).send(error)
   }
   }
+
+
+
+export const getSchoolByFilter = async schoolFilter => {
+
+  if(!schoolFilter){
+    schoolFilter = {}
+  }
+  const {location, address, name, rating, sport, type } = schoolFilter
+
+  let query = schoolCollection
+  if(location){
+    query = query.where("location", "==", location)
+  }
+
+  if(address){
+    query = query.where("location", "==", address)
+  }
+
+  if(name){
+    query = query.where("name", "==", name)
+  }
+  if(rating){
+    query = query.where("rating", "==", rating)
+  }
+  if(sport){
+    query = query.where("sport", "==", sport)
+  }
+  if(type){
+    query = query.where("type", "==", type)
+  }
+  try {
+    const snapshot = await query.get()
+    const result = snapshot.docs.map((doc) => {
+      const school = doc.data();
+      school.id = doc.id
+      return school;
+    });
+    return result;
+  } catch (error) {
+    console.error(error)
+    
+  }
+
+
+
+}
+
+
+

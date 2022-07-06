@@ -1,16 +1,16 @@
 import express from "express";
-import { getAllSchools,createSchool, updateSchool, getSchoolById } from "./src/school.js";
+import { getAllSchools,createSchool, updateSchool, getSchoolById, getSchoolByFilter } from "./src/school.js";
 const app = express();
 app.use(express.json());
 
-app.get("/schools", async (req, res) => {
-  try {
-    const result = await getAllSchools();
-    res.status(200).send(result);
-  } catch (error) {
-    res.status(500).send(error);
-  }
-});
+// app.get("/schools", async (req, res) => {
+//   try {
+//     const result = await getAllSchools();
+//     res.status(200).send(result);
+//   } catch (error) {
+//     res.status(500).send(error);
+//   }
+// });
 
 app.get("/schools/:id", async (req, res) => {
   try {
@@ -22,6 +22,28 @@ app.get("/schools/:id", async (req, res) => {
     
   }
 })
+
+app.get('/schools', async (req, res) => {
+  const {location, address, name, rating, sport, type } = req.query
+  const filter  = {location, address, name, rating, sport, type }
+
+  try {
+    const result = await getSchoolByFilter(filter)
+    console.log(result)
+    res.status(200).send(result)
+  } catch (error) {
+    console.error(error)
+    res.status(500).send(error)
+    
+  }
+
+})
+
+
+
+
+
+
 
 app.post("/schools", async (req, res) => {
   const school = req.body;
@@ -60,3 +82,6 @@ const port = 5551;
 app.listen(port, () => {
   console.log(`We are listening on port ${port}`);
 });
+
+
+
